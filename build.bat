@@ -2,7 +2,9 @@
 set deps=deps/src/glad/glad.c
 set file=src/file.cpp
 set shader=src/shader.cpp
-set files=src/main.cpp %deps% %file% %shader%
+set renderer=src/renderer.cpp
+set resource_manager=src/resource_manager.cpp
+set files=src/main.cpp %deps% %file% %shader% %renderer% %resource_manager%
 set lib=-L deps/lib -lglfw3 -lopengl32 -lgdi32
 set include=-I deps/include
 

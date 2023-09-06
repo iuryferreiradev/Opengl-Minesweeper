@@ -13,7 +13,9 @@ class Shader
 {
   public:
     unsigned int ProgramID;
+    Shader(){};
     Shader(const char* vShaderData, const char* fShaderData);
+    void Compile(const char* vShaderData, const char* fShaderData);
     void Use();
     void SetVec4f(const char* name, glm::vec4 value);
     void SetVec3f(const char* name, glm::vec3 value);

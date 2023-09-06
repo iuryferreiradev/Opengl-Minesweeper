@@ -4,8 +4,9 @@
 
 #include "file.hpp"
 #include "shader.hpp"
-
-const int WIDTH = 800, HEIGHT = 600;
+#include "renderer.hpp"
+#include "resource_manager.hpp"
+#include "constants.hpp"
 
 void error_callback(int error, const char* description)
 {
@@ -24,7 +25,7 @@ int main()
   }
 
   // Creating game window
-  GLFWwindow* window = glfwCreateWindow(WIDTH, HEIGHT, "Minesweeper", NULL, NULL);
+  GLFWwindow* window = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Minesweeper", NULL, NULL);
   if(!window)
   {
     std::cout << "ERROR::GLFW::WINDOW" << std::endl;
@@ -42,6 +43,7 @@ int main()
   // Make the context of the window the current context
   glfwMakeContextCurrent(window);
 
+  
   // Load opengl
   if(!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
   {
@@ -49,12 +51,10 @@ int main()
     return -1;
   }
 
-  std::string vShaderCode = File::Read("assets/shaders/quad.vert");
-  std::string fShaderCode = File::Read("assets/shaders/quad.frag");
+  ResourceManager::LoadShader("rect", "assets/shaders/quad.vert", "assets/shaders/quad.frag");
+  Renderer renderer;
 
-  Shader shader(vShaderCode.c_str(), fShaderCode.c_str());
-
-  glViewport(0, 0, WIDTH, HEIGHT);
+  glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
   // Main loop
   while(!glfwWindowShouldClose(window))
@@ -66,6 +66,10 @@ int main()
     glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
     // Clear the window drawings
     glClear(GL_COLOR_BUFFER_BIT);
+
+    // render the game
+    renderer.DrawRect(glm::vec2(0.0f, 0.0f), glm::vec2(50.0f, 50.0f), glm::vec4(1.0f, 0.0f, 0.0f, 1.0f));
+    renderer.DrawRect(glm::vec2(50.0f, 50.0f), glm::vec2(50.0f, 50.0f), glm::vec4(0.0f, 1.0f, 0.0f, 1.0f));
 
     // Swap the front buffer with the back buffer
     glfwSwapBuffers(window);

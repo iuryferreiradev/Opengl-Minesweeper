@@ -2,7 +2,11 @@
 
 Shader::Shader(const char* vShaderData, const char* fShaderData)
 {
+  this->Compile(vShaderData, fShaderData);
+}
 
+void Shader::Compile(const char* vShaderData, const char* fShaderData)
+{
   unsigned int vShader, fShader;
   vShader = glCreateShader(GL_VERTEX_SHADER);
   glShaderSource(vShader, 1, &vShaderData, NULL);
