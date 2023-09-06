@@ -2,6 +2,9 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
+#include "file.hpp"
+#include "shader.hpp"
+
 const int WIDTH = 800, HEIGHT = 600;
 
 void error_callback(int error, const char* description)
@@ -29,8 +32,8 @@ int main()
   }
 
   // Setting opengl version and profile
-  glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-  glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
+  glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+  glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
   glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
   // Disabling window resizing
@@ -45,6 +48,11 @@ int main()
     std::cout << "ERROR::GLAD::LOAD" << std::endl;
     return -1;
   }
+
+  std::string vShaderCode = File::Read("assets/shaders/quad.vert");
+  std::string fShaderCode = File::Read("assets/shaders/quad.frag");
+
+  Shader shader(vShaderCode.c_str(), fShaderCode.c_str());
 
   glViewport(0, 0, WIDTH, HEIGHT);
 

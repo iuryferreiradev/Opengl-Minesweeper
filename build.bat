@@ -1,6 +1,8 @@
 @echo off
 set deps=deps/src/glad/glad.c
-set files=src/main.cpp %deps%
+set file=src/file.cpp
+set shader=src/shader.cpp
+set files=src/main.cpp %deps% %file% %shader%
 set lib=-L deps/lib -lglfw3 -lopengl32 -lgdi32
 set include=-I deps/include
 
