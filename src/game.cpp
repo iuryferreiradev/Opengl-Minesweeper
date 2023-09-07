@@ -89,8 +89,6 @@ void Game::Run()
     deltaTime = currentTime - lastTime;
     lastTime = currentTime;
 
-    std::cout << currentTime << std::endl;
-
     this->processInputs();
     this->update(deltaTime);
     this->render();
@@ -107,24 +105,22 @@ void Game::init()
 
   this->renderer.Init();
 
-  float size = 24.0f;
-  float offsetX = 40.0f;
-  float offsetY = 176.0f;
-
-  for(int j = 0; j < 30; j++)
+  for(int j = 0; j < ROWS; j++)
   {
-    for(int i = 0; i < 16; i++)
+    for(int i = 0; i < COLS; i++)
     {
       bool isEven = (i + j) % 2 == 0;
-      glm::vec4 color = isEven ? GREEN : LIGHTGREEN;
-      float x = offsetX + j * size;
-      float y = offsetY + i * size;
-      this->tiles.push_back(Tile(x, y, size, size, color));
+      glm::vec4 color = isEven ? GREEN_ONE : GREEN_TWO;
+      glm::vec4 revealedColor = isEven ? BROWN_ONE : BROWN_TWO;
+
+      float x = j * TILE_SIZE;
+      float y = OFFSET_Y + i * TILE_SIZE;
+
+      this->tiles.push_back(Tile(x, y, TILE_SIZE, TILE_SIZE, color, revealedColor));
     }
   }
 }
 
-Flag flag(40.0f, 176.0f, 24.0f, 24.0f);
 void Game::render()
 {
   // Set the clear color to white
@@ -137,8 +133,13 @@ void Game::render()
     tile.Render(this->renderer);
   }
 
-  this->renderer.DrawRect(glm::vec2(0.0f, 0.0f), glm::vec2(SCREEN_WIDTH, 80.0f), DARKGREEN);
-  flag.Render(renderer);
+  this->renderer.DrawRect(glm::vec2(0.0f, 0.0f), glm::vec2(SCREEN_WIDTH, OFFSET_Y), DARKGREEN);
+  // flag.Render(renderer);
+
+  for(Flag &flag : this->flags)
+  {
+    flag.Render(renderer);
+  }
   
   // Swap the front buffer with the back buffer
   glfwSwapBuffers(window);
@@ -147,13 +148,49 @@ void Game::render()
   glfwSwapInterval(1);
 }
 
+int actions = 1;
+
 void Game::update(float deltaTime)
 {
+  Tile* hovered = nullptr;
+
   for(Tile &tile : this->tiles)
   {
     tile.Update(deltaTime);
+
+    if(tile.Contains(State::Mouse))
+    {
+      tile.IsHovered = true;
+      hovered = &tile;
+    }
   }
-  flag.Update(deltaTime);
+
+  if(hovered)
+  {
+    int right_btn = glfwGetMouseButton(this->window, GLFW_MOUSE_BUTTON_RIGHT);
+    if(right_btn == GLFW_PRESS && !hovered->IsRevealed && actions > 0)
+    {
+      this->flags.push_back(Flag(hovered->X, hovered->Y, TILE_SIZE, TILE_SIZE));
+      actions = 0;
+    }
+
+    int left_btn = glfwGetMouseButton(this->window, GLFW_MOUSE_BUTTON_LEFT);
+    if(left_btn == GLFW_PRESS && actions > 0)
+    {
+      hovered->IsRevealed = true;
+      actions = 0;
+    }
+
+    if(left_btn == GLFW_RELEASE && right_btn == GLFW_RELEASE)
+    {
+      actions = 1;
+    }
+  }
+
+  for(Flag &flag : this->flags)
+  {
+    flag.Update(deltaTime);
+  }
 }
 
 void Game::processInputs()

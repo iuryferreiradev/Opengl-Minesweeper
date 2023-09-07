@@ -30,6 +30,7 @@ class Game
     void terminate();
     Renderer renderer;
     std::vector<Tile> tiles;
+    std::vector<Flag> flags;
     GLFWwindow* window;
 };
 

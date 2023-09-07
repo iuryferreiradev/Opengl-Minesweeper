@@ -3,12 +3,18 @@
 
 #include <glm/glm.hpp>
 
-constexpr int SCREEN_WIDTH = 800;
-constexpr int SCREEN_HEIGHT = 600;
-constexpr glm::vec4 BACKGROUND = glm::vec4(55.0 / 255.0, 148.0 /255.0, 110.0 /255.0, 1.0);
-constexpr glm::vec4 GREEN = glm::vec4(106.0 / 255.0, 190.0 /255.0, 48.0 /255.0, 1.0);
-constexpr glm::vec4 LIGHTGREEN = glm::vec4(153.0 / 255.0, 229.0 /255.0, 80.0 /255.0, 1.0);
-constexpr glm::vec4 DARKGREEN = glm::vec4(21.0 / 255.0, 121.0 /255.0, 47.0 /255.0, 1.0);
-constexpr glm::vec4 HIGHLIGHT = glm::vec4(1.0, 1.0, 1.0, 0.7);
+constexpr int SCREEN_WIDTH = 384;
+constexpr int SCREEN_HEIGHT = 456;
+constexpr float TILE_SIZE = 24.0f;
+constexpr float OFFSET_Y = 72.0f;
+constexpr int COLS = 16;
+constexpr int ROWS = 16;
+constexpr glm::vec4 BACKGROUND = glm::vec4(75.0 / 255.0, 148.0 /255.0, 110.0 /255.0, 1.0);
+constexpr glm::vec4 GREEN_ONE = glm::vec4(192.0 / 255.0, 224.0 /255.0, 132.0 /255.0, 1.0);
+constexpr glm::vec4 GREEN_TWO = glm::vec4(186.0 / 255.0, 220.0 /255.0, 127.0 /255.0, 1.0);
+constexpr glm::vec4 DARKGREEN = glm::vec4(75.0 / 255.0, 116.0 /255.0, 50.0 /255.0, 1.0);
+constexpr glm::vec4 BROWN_ONE = glm::vec4(229.0 / 255.0, 193.0 /255.0, 161.0 /255.0, 1.0);
+constexpr glm::vec4 BROWN_TWO = glm::vec4(215.0 / 255.0, 183.0 /255.0, 155.0 /255.0, 1.0);
+constexpr glm::vec4 HIGHLIGHT = glm::vec4(1.0, 1.0, 1.0, 0.4);
 
 #endif

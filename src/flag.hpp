@@ -19,6 +19,7 @@ class Flag
     std::vector<glm::vec4> frames;
     int currentFrame;
     float animationTimer;
+    bool isReverse;
 };
 
 #endif

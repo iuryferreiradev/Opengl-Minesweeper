@@ -13,13 +13,16 @@ class Tile
     float Y;
     float Width;
     float Height;
+    bool IsHovered;
     glm::vec4 Color;
+    glm::vec4 ReveladedColor;
+    bool IsRevealed;
     Tile(){};
-    Tile(float x, float y, float width, float height, glm::vec4 color);
+    Tile(float x, float y, float width, float height, glm::vec4 color, glm::vec4 revealedColor);
     void Render(Renderer renderer);
     void Update(float deltaTime);
+    bool Contains(glm::vec2 vector);
   private:
-    bool isHovered;
 };
 
 #endif

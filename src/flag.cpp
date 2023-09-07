@@ -8,18 +8,18 @@ Flag::Flag(float x, float y, float width, float height)
   this->height = height;
   this->frames = {
     //        x             y     w      h
-    glm::vec4(24.0f * 0.0f, 0.0f, 24.0f, 24.0f),
-    glm::vec4(24.0f * 1.0f, 0.0f, 24.0f, 24.0f),
-    glm::vec4(24.0f * 2.0f, 0.0f, 24.0f, 24.0f),
-    glm::vec4(24.0f * 3.0f, 0.0f, 24.0f, 24.0f),
-    glm::vec4(24.0f * 4.0f, 0.0f, 24.0f, 24.0f),
-    glm::vec4(24.0f * 5.0f, 0.0f, 24.0f, 24.0f),
-    glm::vec4(24.0f * 6.0f, 0.0f, 24.0f, 24.0f),
-    glm::vec4(24.0f * 7.0f, 0.0f, 24.0f, 24.0f),
-    glm::vec4(24.0f * 8.0f, 0.0f, 24.0f, 24.0f),
-    glm::vec4(24.0f * 9.0f, 0.0f, 24.0f, 24.0f),
-    glm::vec4(24.0f * 10.0f, 0.0f, 24.0f, 24.0f),
-    glm::vec4(24.0f * 11.0f, 0.0f, 24.0f, 24.0f),
+    glm::vec4(TILE_SIZE * 0.0f, 0.0f, TILE_SIZE, TILE_SIZE),
+    glm::vec4(TILE_SIZE * 1.0f, 0.0f, TILE_SIZE, TILE_SIZE),
+    glm::vec4(TILE_SIZE * 2.0f, 0.0f, TILE_SIZE, TILE_SIZE),
+    glm::vec4(TILE_SIZE * 3.0f, 0.0f, TILE_SIZE, TILE_SIZE),
+    glm::vec4(TILE_SIZE * 4.0f, 0.0f, TILE_SIZE, TILE_SIZE),
+    glm::vec4(TILE_SIZE * 5.0f, 0.0f, TILE_SIZE, TILE_SIZE),
+    glm::vec4(TILE_SIZE * 6.0f, 0.0f, TILE_SIZE, TILE_SIZE),
+    glm::vec4(TILE_SIZE * 7.0f, 0.0f, TILE_SIZE, TILE_SIZE),
+    glm::vec4(TILE_SIZE * 8.0f, 0.0f, TILE_SIZE, TILE_SIZE),
+    glm::vec4(TILE_SIZE * 9.0f, 0.0f, TILE_SIZE, TILE_SIZE),
+    glm::vec4(TILE_SIZE * 10.0f, 0.0f, TILE_SIZE, TILE_SIZE),
+    glm::vec4(TILE_SIZE * 11.0f, 0.0f, TILE_SIZE, TILE_SIZE),
   };
   this->currentFrame = 0;
   this->animationTimer = 0.0f;
