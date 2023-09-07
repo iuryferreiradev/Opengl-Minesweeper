@@ -5,7 +5,8 @@ set shader=src/shader.cpp
 set renderer=src/renderer.cpp
 set resource_manager=src/resource_manager.cpp
 set game=src/game.cpp
-set files=src/main.cpp %deps% %file% %shader% %renderer% %resource_manager% %game%
+set tile=src/tile.cpp
+set files=src/main.cpp %deps% %file% %shader% %renderer% %resource_manager% %game% %tile%
 set lib=-L deps/lib -lglfw3 -lopengl32 -lgdi32
 set include=-I deps/include
 

@@ -6,6 +6,9 @@
 #include <iostream>
 
 #include "resource_manager.hpp"
+#include "renderer.hpp"
+#include "tile.hpp"
+#include <vector>
 
 class Game
 {
@@ -23,6 +26,7 @@ class Game
     void setupWindow();
     void processInputs();
     void terminate();
+    std::vector<Tile> tiles;
     GLFWwindow* window;
 };
 

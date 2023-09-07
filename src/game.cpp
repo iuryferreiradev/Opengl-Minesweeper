@@ -89,16 +89,42 @@ void Game::init()
 {
   this->setupWindow();
   ResourceManager::LoadShader("rect", "assets/shaders/quad.vert", "assets/shaders/quad.frag");
+  float size = 24.0f;
+  float offsetX = 40.0f;
+  float offsetY = 176.0f;
+
+  for(int j = 0; j < 30; j++)
+  {
+    for(int i = 0; i < 16; i++)
+    {
+      bool isEven = (i + j) % 2 == 0;
+      glm::vec4 color = isEven ? GREEN : LIGHTGREEN;
+      float x = offsetX + j * size;
+      float y = offsetY + i * size;
+      this->tiles.push_back(Tile(x, y, size, size, color));
+    }
+  }
 }
 
 void Game::render()
 {
+  Renderer renderer;
   // Set the clear color to white
-  glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+  glClearColor(BACKGROUND.x, BACKGROUND.y, BACKGROUND.z, BACKGROUND.w);
   // Clear the window drawings
   glClear(GL_COLOR_BUFFER_BIT);
+
+  for(auto tile : this->tiles)
+  {
+    tile.Render(renderer);
+  }
+
+  renderer.DrawRect(glm::vec2(0.0f, 0.0f), glm::vec2(SCREEN_WIDTH, 80.0f), DARKGREEN);
   // Swap the front buffer with the back buffer
   glfwSwapBuffers(window);
+
+  // V-Sync, i think..
+  glfwSwapInterval(1);
 }
 
 void Game::update(float deltaTime)
