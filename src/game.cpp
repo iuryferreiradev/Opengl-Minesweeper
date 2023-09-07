@@ -5,6 +5,11 @@ void error_callback(int error, const char* description)
   std::cout << "ERROR::GLFW::CALLBACK\n" << description << std::endl;
 }
 
+void cursor_position_callback(GLFWwindow *window, double xpos, double ypos)
+{
+  State::Mouse = glm::vec2(xpos, ypos);
+}
+
 Game::Game(int width, int height, const char* name)
 {
   this->Height = height;
@@ -45,6 +50,9 @@ void Game::setupWindow()
     this->terminate();
   }
 
+  // Callback to update mouse position
+  glfwSetCursorPosCallback(this->window, cursor_position_callback);
+
   // Setting opengl version and profile
   glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
   glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -56,13 +64,16 @@ void Game::setupWindow()
   // Make the context of the window the current context
   glfwMakeContextCurrent(window);
 
-  
   // Load opengl
   if(!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
   {
     std::cout << "ERROR::GLAD::LOAD" << std::endl;
     this->terminate();
   }
+
+  // Enable blending for transparency
+  glEnable(GL_BLEND);
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
   glViewport(0, 0, this->Width, this->Height);
 }
@@ -114,7 +125,7 @@ void Game::render()
   // Clear the window drawings
   glClear(GL_COLOR_BUFFER_BIT);
 
-  for(auto tile : this->tiles)
+  for(Tile &tile : this->tiles)
   {
     tile.Render(renderer);
   }
@@ -129,7 +140,10 @@ void Game::render()
 
 void Game::update(float deltaTime)
 {
-
+  for(Tile &tile : this->tiles)
+  {
+    tile.Update(deltaTime);
+  }
 }
 
 void Game::processInputs()

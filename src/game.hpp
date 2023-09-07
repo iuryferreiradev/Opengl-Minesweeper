@@ -4,11 +4,12 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <iostream>
+#include <vector>
 
 #include "resource_manager.hpp"
 #include "renderer.hpp"
 #include "tile.hpp"
-#include <vector>
+#include "state.hpp"
 
 class Game
 {
