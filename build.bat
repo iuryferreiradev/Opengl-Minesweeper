@@ -1,5 +1,5 @@
 @echo off
-set deps=deps/src/glad/glad.c
+set deps=deps/src/glad/glad.c deps/src/stb/stb_image.cpp
 set file=src/file.cpp
 set shader=src/shader.cpp
 set renderer=src/renderer.cpp
@@ -7,7 +7,8 @@ set resource_manager=src/resource_manager.cpp
 set game=src/game.cpp
 set tile=src/tile.cpp
 set state=src/state.cpp
-set files=src/main.cpp %deps% %file% %shader% %renderer% %resource_manager% %game% %tile% %state%
+set texture=src/texture.cpp
+set files=src/main.cpp %deps% %file% %shader% %renderer% %resource_manager% %game% %tile% %state% %texture%
 set lib=-L deps/lib -lglfw3 -lopengl32 -lgdi32
 set include=-I deps/include
 

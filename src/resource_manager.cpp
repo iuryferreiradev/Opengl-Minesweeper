@@ -2,6 +2,7 @@
 
 // Load static maps
 std::map<std::string, Shader> ResourceManager::Shaders;
+std::map<std::string, Texture2D> ResourceManager::Textures;
 
 void ResourceManager::LoadShader(std::string name, const char* vShaderPath, const char* fShaderPath)
 {
@@ -30,8 +31,35 @@ Shader ResourceManager::GetShader(std::string name)
   auto iterator = Shaders.find(name);
   if(iterator == Shaders.end())
   {
-    std::cout << "Shader with name: " << name << " not found!" << std::endl;
+    std::cout << "ERROR::RESOURCE_MANAGER::GET_SHADER: Shader with name: " << name << " not found!" << std::endl;
   }
 
   return Shaders[name];
+}
+
+void ResourceManager::LoadTexture(std::string name, const char* texturePath)
+{
+  int width, height, nrChannels;
+  unsigned char* data = stbi_load(texturePath, &width, &height, &nrChannels, 0);
+  if(data)
+  {
+    Texture2D texture(width, height, nrChannels, data);
+    Textures[name] = texture;
+    std::cout << "Texture loaded successfully. Name: " << name << std::endl;
+  }
+  else
+  {
+    std::cout << "ERROR::RESOURCE_MANAGER::LOAD_TEXTURE: Could not load texture - " << name << std::endl;
+  }
+}
+
+Texture2D ResourceManager::GetTexture(std::string name)
+{
+  auto iterator = Textures.find(name);
+  if(iterator == Textures.end())
+  {
+    std::cout << "ERROR::RESOURCE_MANAGER::GET_TEXTURE: Texture with name: " << name << " not found!" << std::endl;
+  }
+  
+  return Textures[name];
 }

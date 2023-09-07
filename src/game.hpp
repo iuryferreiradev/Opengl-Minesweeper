@@ -27,6 +27,7 @@ class Game
     void setupWindow();
     void processInputs();
     void terminate();
+    Renderer renderer;
     std::vector<Tile> tiles;
     GLFWwindow* window;
 };

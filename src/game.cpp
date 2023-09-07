@@ -100,6 +100,11 @@ void Game::init()
 {
   this->setupWindow();
   ResourceManager::LoadShader("rect", "assets/shaders/quad.vert", "assets/shaders/quad.frag");
+  ResourceManager::LoadShader("sprite", "assets/shaders/sprite.vert", "assets/shaders/sprite.frag");
+  ResourceManager::LoadTexture("flag", "assets/images/flag_spritesheet.png");
+
+  this->renderer.Init();
+
   float size = 24.0f;
   float offsetX = 40.0f;
   float offsetY = 176.0f;
@@ -119,7 +124,6 @@ void Game::init()
 
 void Game::render()
 {
-  Renderer renderer;
   // Set the clear color to white
   glClearColor(BACKGROUND.x, BACKGROUND.y, BACKGROUND.z, BACKGROUND.w);
   // Clear the window drawings
@@ -127,10 +131,11 @@ void Game::render()
 
   for(Tile &tile : this->tiles)
   {
-    tile.Render(renderer);
+    tile.Render(this->renderer);
   }
 
-  renderer.DrawRect(glm::vec2(0.0f, 0.0f), glm::vec2(SCREEN_WIDTH, 80.0f), DARKGREEN);
+  this->renderer.DrawRect(glm::vec2(0.0f, 0.0f), glm::vec2(SCREEN_WIDTH, 80.0f), DARKGREEN);
+  this->renderer.DrawSprite("flag", glm::vec2(40.0f, 176.0f), glm::vec2(288.0f, 24.0f));
   // Swap the front buffer with the back buffer
   glfwSwapBuffers(window);
 
