@@ -89,6 +89,8 @@ void Game::Run()
     deltaTime = currentTime - lastTime;
     lastTime = currentTime;
 
+    std::cout << currentTime << std::endl;
+
     this->processInputs();
     this->update(deltaTime);
     this->render();
@@ -122,6 +124,7 @@ void Game::init()
   }
 }
 
+Flag flag(40.0f, 176.0f, 24.0f, 24.0f);
 void Game::render()
 {
   // Set the clear color to white
@@ -135,7 +138,8 @@ void Game::render()
   }
 
   this->renderer.DrawRect(glm::vec2(0.0f, 0.0f), glm::vec2(SCREEN_WIDTH, 80.0f), DARKGREEN);
-  this->renderer.DrawSprite("flag", glm::vec2(40.0f, 176.0f), glm::vec2(288.0f, 24.0f));
+  flag.Render(renderer);
+  
   // Swap the front buffer with the back buffer
   glfwSwapBuffers(window);
 
@@ -149,6 +153,7 @@ void Game::update(float deltaTime)
   {
     tile.Update(deltaTime);
   }
+  flag.Update(deltaTime);
 }
 
 void Game::processInputs()

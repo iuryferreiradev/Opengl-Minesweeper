@@ -16,6 +16,8 @@ class Renderer
     Renderer(){};
     void DrawRect(glm::vec2 position, glm::vec2 size, glm::vec4 color);
     void DrawSprite(std::string name, glm::vec2 position, glm::vec2 size);
+    void DrawSprite(std::string name, glm::vec2 position, glm::vec2 size, glm::vec2 location);
+    void DrawSprite(std::string name, glm::vec2 position, glm::vec2 size, glm::vec2 location, glm::vec2 dimension);
     void Init();
   private:
     std::map<std::string, unsigned int[3]> arrays;

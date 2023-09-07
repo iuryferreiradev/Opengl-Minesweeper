@@ -10,6 +10,7 @@
 #include "renderer.hpp"
 #include "tile.hpp"
 #include "state.hpp"
+#include "flag.hpp"
 
 class Game
 {
