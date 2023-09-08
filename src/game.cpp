@@ -98,6 +98,10 @@ void Game::Run()
 
 void Game::resetGame()
 {
+  State::isGameOver = false;
+  State::didWin = false;
+  State::flagCount = BOMB_AMOUNT;
+
   // Create tile grid
   for(int j = 0; j < ROWS; j++)
   {
@@ -115,7 +119,7 @@ void Game::resetGame()
   }
 
   // Set bombs
-  int totalBombs = 40;
+  int totalBombs = BOMB_AMOUNT;
   while(totalBombs > 0)
   {
     std::random_device rd;
@@ -180,12 +184,15 @@ void Game::init()
   ResourceManager::LoadTexture("flag", "assets/images/flag_spritesheet.png");
   ResourceManager::LoadTexture("bomb", "assets/images/bomb.png");
   ResourceManager::LoadTexture("numbers", "assets/images/numbers.png");
+  ResourceManager::LoadTexture("refresh", "assets/images/refresh.png");
+  ResourceManager::LoadTexture("lose", "assets/images/you_lose.png");
+  ResourceManager::LoadTexture("win", "assets/images/you_win.png");
 
   this->renderer.Init();
   this->resetGame();
 }
 
-
+bool isRefreshHovered = false;
 void Game::render()
 {
   // Set the clear color to white
@@ -209,12 +216,34 @@ void Game::render()
     flag.Render(renderer);
   }
 
+  // Flag counter
   Flag flagIcon(24.0f, 24.0f, 24.0f, 24.0f);
   flagIcon.CurrentFrame = 11;
   Number flagCount(48.0f, 24.0f, 24.0f, 24.0f, std::to_string(State::flagCount), glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
   flagCount.hasPadding = false;
   flagCount.Render(renderer);
   flagIcon.Render(renderer);
+
+  // Refresh button
+  renderer.DrawRect(glm::vec2(SCREEN_WIDTH * 0.5 - 24.0f, 24.0f), glm::vec2(24.0f), GREEN_TWO);
+  if(isRefreshHovered)
+  {
+    renderer.DrawRect(glm::vec2(SCREEN_WIDTH * 0.5 - 24.0f, 24.0f), glm::vec2(24.0f), HIGHLIGHT);
+  }
+  renderer.DrawSprite("refresh", glm::vec2(SCREEN_WIDTH * 0.5 - 24.0f, 24.0f), glm::vec2(24.0f));
+
+  if(State::isGameOver)
+  {
+    if(State::didWin)
+    {
+      renderer.DrawSprite("win", glm::vec2(SCREEN_WIDTH * 0.5 - 120.0f, SCREEN_HEIGHT * 0.5 - 60.0f), glm::vec2(240.0f, 120.0f));
+    }
+    else
+    {
+      renderer.DrawSprite("lose", glm::vec2(SCREEN_WIDTH * 0.5 - 120.0f, SCREEN_HEIGHT * 0.5 - 60.0f), glm::vec2(240.0f, 120.0f));
+    }
+  }
+
   // Swap the front buffer with the back buffer
   glfwSwapBuffers(window);
 
@@ -241,6 +270,9 @@ void Game::update(float deltaTime)
     }
   }
 
+  int right_btn = glfwGetMouseButton(this->window, GLFW_MOUSE_BUTTON_RIGHT);
+  int left_btn = glfwGetMouseButton(this->window, GLFW_MOUSE_BUTTON_LEFT);
+
   if(hovered)
   {
     Flag *currentFlag = nullptr;
@@ -254,45 +286,95 @@ void Game::update(float deltaTime)
     }
 
     // Right click - place flag
-    int right_btn = glfwGetMouseButton(this->window, GLFW_MOUSE_BUTTON_RIGHT);
-    if(!currentFlag && right_btn == GLFW_PRESS && !hovered->IsRevealed && actions > 0 && State::flagCount > 0)
+    if(!State::isGameOver && !currentFlag && right_btn == GLFW_PRESS && !hovered->IsRevealed && actions > 0 && State::flagCount > 0)
     {
       this->flags.push_back(Flag(hovered->X, hovered->Y, TILE_SIZE, TILE_SIZE));
+      hovered->HasFlag = true;
       State::flagCount--;
       actions = 0;
     }
 
     // right click - remove flag 
-    if(right_btn == GLFW_PRESS && currentFlag && actions > 0)
+    if(!State::isGameOver && right_btn == GLFW_PRESS && currentFlag && actions > 0)
     {
       // Remove flag from array
       currentFlag->shouldRemove = true;
+      hovered->HasFlag = false;
       actions = 0;
     }
 
     // Left click reveal tile
-    int left_btn = glfwGetMouseButton(this->window, GLFW_MOUSE_BUTTON_LEFT);
-    if(!currentFlag && left_btn == GLFW_PRESS && actions > 0)
+    if(!State::isGameOver && !currentFlag && left_btn == GLFW_PRESS && actions > 0)
     {
-      hovered->Reveal(this->tiles);
       actions = 0;
+      if(hovered->HasBomb)
+      {
+        State::isGameOver = true;
+      }
+      
+      hovered->Reveal(this->tiles);
     }
 
-    // Reset actions on mouse buttons release
-    if(left_btn == GLFW_RELEASE && right_btn == GLFW_RELEASE)
-    {
-      actions = 1;
-    }
   }
 
   for(int i = 0; i < this->flags.size(); i++)
   {
     this->flags[i].Update(deltaTime);
-    if(this->flags[i].shouldRemove && this->flags[i].CurrentFrame == 0)
+
+    int x = this->flags[i].x / TILE_SIZE;
+    int y = (this->flags[i].y - OFFSET_Y) / TILE_SIZE;
+
+    if(
+      this->flags[i].shouldRemove && this->flags[i].CurrentFrame == 0 || // Normal removal
+      this->tiles[x][y].IsRevealed                                       // Removal via floodfill
+    )
     {
       this->flags.erase(this->flags.begin() + i);
       State::flagCount++;
     }
+  }
+
+  // Check for refresh btn hover and click
+  float refreshBtnX = SCREEN_WIDTH * 0.5 - 24.0f;
+  float refreshBtnY = 24.0f;
+  isRefreshHovered = false;
+
+  if(
+    State::Mouse.x > refreshBtnX && State::Mouse.x < refreshBtnX + TILE_SIZE &&
+    State::Mouse.y > refreshBtnY && State::Mouse.y < refreshBtnY + TILE_SIZE
+  )
+  {
+    isRefreshHovered = true;
+    if(left_btn == GLFW_PRESS && actions > 0)
+    {
+      this->resetGame();
+      actions = 0;
+    }
+  }
+
+  // Reset actions on mouse buttons release
+  if(left_btn == GLFW_RELEASE && right_btn == GLFW_RELEASE)
+  {
+    actions = 1;
+  }
+
+  // Check if all the spaces that does not have a bomb are reveald, win condition
+  bool hasMoves = false;
+  for(int j = 0; j < ROWS; j++)
+  {
+    for(int i = 0; i < COLS; i++)
+    {
+      if(!this->tiles[j][i].HasBomb && !this->tiles[j][i].IsRevealed)
+      {
+        hasMoves = true;
+      }
+    }
+  }
+
+  if(!hasMoves)
+  {
+    State::isGameOver = true;
+    State::didWin = true;
   }
 }
 

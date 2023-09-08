@@ -1,12 +1,14 @@
 #ifndef TILE_H
 #define TILE_H
 
-#include <glm/glm.hpp>
-#include <vector>
-
 #include "renderer.hpp"
 #include "state.hpp"
 #include "number.hpp"
+#include "flag.hpp"
+
+#include <glm/glm.hpp>
+#include <vector>
+
 
 class Tile
 {
@@ -18,6 +20,7 @@ class Tile
     bool IsHovered;
     bool IsRevealed;
     bool HasBomb;
+    bool HasFlag;
     int NeighborCount;
     glm::vec4 Color;
     glm::vec4 ReveladedColor;
@@ -27,6 +30,8 @@ class Tile
     void Update(float deltaTime);
     bool Contains(glm::vec2 vector);
     void Reveal(std::vector<std::vector<Tile>>& tiles);
+  private:
+    glm::vec4 bombColor;
 };
 
 #endif

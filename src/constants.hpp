@@ -10,6 +10,7 @@ constexpr float TILE_SIZE = 24.0f;
 constexpr float OFFSET_Y = 72.0f;
 constexpr int COLS = 16;
 constexpr int ROWS = 16;
+constexpr int BOMB_AMOUNT = 40;
 constexpr glm::vec4 BACKGROUND = glm::vec4(75.0 / 255.0, 148.0 /255.0, 110.0 /255.0, 1.0);
 constexpr glm::vec4 GREEN_ONE = glm::vec4(192.0 / 255.0, 224.0 /255.0, 132.0 /255.0, 1.0);
 constexpr glm::vec4 GREEN_TWO = glm::vec4(186.0 / 255.0, 220.0 /255.0, 127.0 /255.0, 1.0);

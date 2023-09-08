@@ -1,5 +1,16 @@
 {
   "files.associations": {
-    "vector": "cpp"
+    "vector": "cpp",
+    "*.rh": "cpp",
+    "chrono": "cpp",
+    "filesystem": "cpp",
+    "iomanip": "cpp",
+    "istream": "cpp",
+    "ostream": "cpp",
+    "random": "cpp",
+    "xiosbase": "cpp",
+    "xlocmon": "cpp",
+    "xlocnum": "cpp",
+    "xstring": "cpp"
   }
 }

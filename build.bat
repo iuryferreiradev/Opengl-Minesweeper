@@ -14,4 +14,4 @@ set files=src/main.cpp %deps% %file% %shader% %renderer% %resource_manager% %gam
 set lib=-L deps/lib -lglfw3 -lopengl32 -lgdi32
 set include=-I deps/include
 
-g++ -std=c++20 %files% %include% %lib% -o minesweeper.exe && minesweeper.exe
+g++ -std=c++20 %files% %include% %lib% -mwindows -o minesweeper.exe && minesweeper.exe
