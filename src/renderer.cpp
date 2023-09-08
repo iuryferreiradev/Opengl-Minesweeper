@@ -73,53 +73,15 @@ void Renderer::initRectData()
 
 void Renderer::DrawSprite(std::string name, glm::vec2 position, glm::vec2 size)
 {
-  // // Translate and scale
-  // glm::mat4 model = glm::mat4(1.0f);
-  // model = glm::translate(model, glm::vec3(position, 0.0f));
-  // model = glm::scale(model, glm::vec3(size, 0.0f));
-  // // 2D projection
-  // glm::mat4 projection = glm::ortho(0.0f, static_cast<float>(SCREEN_WIDTH), static_cast<float>(SCREEN_HEIGHT), 0.0f, -1.0f, 1.0f);
-  // Shader shader = ResourceManager::GetShader("sprite");
-  // Texture2D texture = ResourceManager::GetTexture(name);
-  // // Use the shader program
-  // shader.Use();
-  // shader.SetMatrix4fv("model", model);
-  // shader.SetMatrix4fv("projection", projection);
-  // // Bind vertex array
-  // glBindVertexArray(this->arrays["sprite"][0]);
-  // // Bind the texture
-  // texture.Bind();
-  // // Draw the sprite
-  // glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-  // // Unbind
-  // glBindVertexArray(0);
-  // glBindTexture(GL_TEXTURE_2D, 0);
-  this->DrawSprite(name, position, size, glm::vec2(0.0f), size);
+  this->DrawSprite(name, position, size, glm::vec2(0.0f), size, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
 }
 
 void Renderer::DrawSprite(std::string name, glm::vec2 position, glm::vec2 size, glm::vec2 location)
 {
-  // Texture2D texture = ResourceManager::GetTexture(name);
-
-  // float sheetWidth = texture.Width;
-  // float sheetHeight = texture.Height;
-
-
-  // float vertices[] = {
-  //   0.0f, 1.0f, location.x / sheetWidth, (location.y + size.y) / sheetHeight, // Top left
-  //   0.0f, 0.0f, location.x / sheetWidth, location.y / sheetHeight, // Bottom0.0f, 1.0f, 0.0f, 1.0f, // Top left
-  //   1.0f, 1.0f, (location.x + size.x) / sheetWidth, (location.y + size.y) / sheetHeight, // Top right
-  //   1.0f, 0.0f, (location.x + size.x) / sheetWidth, location.y / sheetHeight  // Bottom right
-  // };
-
-  // glBindVertexArray(this->arrays["sprite"][0]);
-  // glBindBuffer(GL_ARRAY_BUFFER, this->arrays["sprite"][1]);
-  // glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices);
-
-  this->DrawSprite(name, position, size, location, size);
+  this->DrawSprite(name, position, size, location, size, glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
 }
 
-void Renderer::DrawSprite(std::string name, glm::vec2 position, glm::vec2 size, glm::vec2 location, glm::vec2 dimension)
+void Renderer::DrawSprite(std::string name, glm::vec2 position, glm::vec2 size, glm::vec2 location, glm::vec2 dimension, glm::vec4 color)
 {
   Texture2D texture = ResourceManager::GetTexture(name);
 
@@ -149,6 +111,8 @@ void Renderer::DrawSprite(std::string name, glm::vec2 position, glm::vec2 size, 
   shader.Use();
   shader.SetMatrix4fv("model", model);
   shader.SetMatrix4fv("projection", projection);
+
+  shader.SetVec4f("color", color);
   // Bind the texture
   texture.Bind();
   // Draw the sprite

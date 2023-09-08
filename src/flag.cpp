@@ -29,13 +29,13 @@ Flag::Flag(float x, float y, float width, float height)
 void Flag::Render(Renderer renderer)
 {
   glm::vec4 frame = this->frames[this->CurrentFrame];
-  renderer.DrawSprite("flag", glm::vec2(x, y), glm::vec2(width, height), glm::vec2(frame.x, frame.y), glm::vec2(frame.z, frame.w));
+  renderer.DrawSprite("flag", glm::vec2(x, y), glm::vec2(width, height), glm::vec2(frame.x, frame.y), glm::vec2(frame.z, frame.w), glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
 }
 
 void Flag::Update(float deltaTime)
 {
   // Setup a time state
-  if(glfwGetTime() > this->animationTimer + 0.030) // 30ms delay between each frame
+  if(glfwGetTime() > this->animationTimer + 0.006) // 6ms delay between each frame
   {
     if(!this->shouldRemove && this->CurrentFrame < this->frames.size() -1)
     {

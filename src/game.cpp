@@ -134,6 +134,39 @@ void Game::resetGame()
   }
 
   // Calculate neighbor count
+  for(int j = 0; j < ROWS; j++)
+  {
+    for(int i = 0; i < COLS; i++)
+    {
+      int bombCount = 0;
+      // up left
+      if(j - 1 >= 0 && i - 1 >= 0 && this->tiles[j - 1][i - 1].HasBomb)
+        bombCount++;
+      // up
+      if(i - 1 >= 0 && this->tiles[j][i - 1].HasBomb)
+        bombCount++;
+      // up right
+      if(j + 1 <= ROWS - 1 && i - 1 >= 0 && this->tiles[j + 1][i - 1].HasBomb)
+        bombCount++;
+      // left
+      if(j - 1 >= 0 && this->tiles[j - 1][i].HasBomb)
+        bombCount++;
+      // right
+      if(j + 1 <= ROWS - 1 && this->tiles[j + 1][i].HasBomb)
+        bombCount++;
+      // bottom left
+      if(j - 1 >= 0 && i + 1 <= COLS - 1 && this->tiles[j - 1][i + 1].HasBomb)
+        bombCount++;
+      // bottom
+      if(i + 1 <= COLS - 1 && this->tiles[j][i + 1].HasBomb)
+        bombCount++;
+      // bottom right
+      if(j + 1 <= ROWS - 1 && i + 1 <= COLS - 1 && this->tiles[j + 1][i + 1].HasBomb)
+        bombCount++;
+
+      this->tiles[j][i].NeighborCount = bombCount;
+    }
+  }
 
   // Reset flags and timer
   this->flags = std::vector<Flag>();
@@ -146,10 +179,12 @@ void Game::init()
   ResourceManager::LoadShader("sprite", "assets/shaders/sprite.vert", "assets/shaders/sprite.frag");
   ResourceManager::LoadTexture("flag", "assets/images/flag_spritesheet.png");
   ResourceManager::LoadTexture("bomb", "assets/images/bomb.png");
+  ResourceManager::LoadTexture("numbers", "assets/images/numbers.png");
 
   this->renderer.Init();
   this->resetGame();
 }
+
 
 void Game::render()
 {
@@ -173,7 +208,13 @@ void Game::render()
   {
     flag.Render(renderer);
   }
-  
+
+  Flag flagIcon(24.0f, 24.0f, 24.0f, 24.0f);
+  flagIcon.CurrentFrame = 11;
+  Number flagCount(48.0f, 24.0f, 24.0f, 24.0f, std::to_string(State::flagCount), glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
+  flagCount.hasPadding = false;
+  flagCount.Render(renderer);
+  flagIcon.Render(renderer);
   // Swap the front buffer with the back buffer
   glfwSwapBuffers(window);
 
@@ -212,13 +253,16 @@ void Game::update(float deltaTime)
       }
     }
 
+    // Right click - place flag
     int right_btn = glfwGetMouseButton(this->window, GLFW_MOUSE_BUTTON_RIGHT);
-    if(!currentFlag && right_btn == GLFW_PRESS && !hovered->IsRevealed && actions > 0)
+    if(!currentFlag && right_btn == GLFW_PRESS && !hovered->IsRevealed && actions > 0 && State::flagCount > 0)
     {
       this->flags.push_back(Flag(hovered->X, hovered->Y, TILE_SIZE, TILE_SIZE));
+      State::flagCount--;
       actions = 0;
     }
-    
+
+    // right click - remove flag 
     if(right_btn == GLFW_PRESS && currentFlag && actions > 0)
     {
       // Remove flag from array
@@ -226,13 +270,15 @@ void Game::update(float deltaTime)
       actions = 0;
     }
 
+    // Left click reveal tile
     int left_btn = glfwGetMouseButton(this->window, GLFW_MOUSE_BUTTON_LEFT);
     if(!currentFlag && left_btn == GLFW_PRESS && actions > 0)
     {
-      hovered->IsRevealed = true;
+      hovered->Reveal(this->tiles);
       actions = 0;
     }
 
+    // Reset actions on mouse buttons release
     if(left_btn == GLFW_RELEASE && right_btn == GLFW_RELEASE)
     {
       actions = 1;
@@ -245,6 +291,7 @@ void Game::update(float deltaTime)
     if(this->flags[i].shouldRemove && this->flags[i].CurrentFrame == 0)
     {
       this->flags.erase(this->flags.begin() + i);
+      State::flagCount++;
     }
   }
 }

@@ -2,8 +2,10 @@
 #define FLAG_H
 
 #include "renderer.hpp"
+
 #include <vector>
 #include <GLFW/glfw3.h>
+
 
 class Flag
 {

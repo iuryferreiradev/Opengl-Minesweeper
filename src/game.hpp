@@ -12,6 +12,7 @@
 #include "tile.hpp"
 #include "state.hpp"
 #include "flag.hpp"
+#include "number.hpp"
 
 class Game
 {

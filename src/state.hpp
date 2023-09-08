@@ -7,6 +7,7 @@ class State
 {
   public:
     static glm::vec2 Mouse;
+    static int flagCount;
 };
 
 #endif
