@@ -17,6 +17,7 @@ class Tile
     glm::vec4 Color;
     glm::vec4 ReveladedColor;
     bool IsRevealed;
+    bool HasBomb;
     Tile(){};
     Tile(float x, float y, float width, float height, glm::vec4 color, glm::vec4 revealedColor);
     void Render(Renderer renderer);

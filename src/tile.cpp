@@ -15,7 +15,7 @@ void Tile::Render(Renderer renderer)
 {
   renderer.DrawRect(glm::vec2(this->X, this->Y), glm::vec2(this->Width, this->Height), this->IsRevealed ? this->ReveladedColor : this->Color);
 
-  if(this->IsHovered)
+  if(this->IsHovered && !this->IsRevealed)
   {
     renderer.DrawRect(glm::vec2(this->X, this->Y), glm::vec2(this->Width, this->Height), HIGHLIGHT);
   }

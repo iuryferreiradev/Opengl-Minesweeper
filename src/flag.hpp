@@ -12,12 +12,13 @@ class Flag
     float y;
     float width;
     float height;
+    bool shouldRemove;
+    int CurrentFrame;
     Flag(float x, float y, float width, float height);
     void Render(Renderer renderer);
     void Update(float deltaTime);
   private:
     std::vector<glm::vec4> frames;
-    int currentFrame;
     float animationTimer;
     bool isReverse;
 };

@@ -16,6 +16,7 @@ Game::Game(int width, int height, const char* name)
   this->Width = width;
   this->Name = name;
   this->window = nullptr;
+  this->tiles = std::vector(ROWS, std::vector<Tile>(COLS));
 
   this->init();
 }
@@ -116,7 +117,7 @@ void Game::init()
       float x = j * TILE_SIZE;
       float y = OFFSET_Y + i * TILE_SIZE;
 
-      this->tiles.push_back(Tile(x, y, TILE_SIZE, TILE_SIZE, color, revealedColor));
+      this->tiles[j][i] = Tile(x, y, TILE_SIZE, TILE_SIZE, color, revealedColor);
     }
   }
 }
@@ -128,9 +129,12 @@ void Game::render()
   // Clear the window drawings
   glClear(GL_COLOR_BUFFER_BIT);
 
-  for(Tile &tile : this->tiles)
+  for(int j = 0; j < ROWS; j++)
   {
-    tile.Render(this->renderer);
+    for(int i = 0; i < COLS; i++)
+    {
+      this->tiles[j][i].Render(renderer);
+    }
   }
 
   this->renderer.DrawRect(glm::vec2(0.0f, 0.0f), glm::vec2(SCREEN_WIDTH, OFFSET_Y), DARKGREEN);
@@ -154,28 +158,47 @@ void Game::update(float deltaTime)
 {
   Tile* hovered = nullptr;
 
-  for(Tile &tile : this->tiles)
+  for(int j = 0; j < ROWS; j++)
   {
-    tile.Update(deltaTime);
-
-    if(tile.Contains(State::Mouse))
+    for(int i = 0; i < COLS; i++)
     {
-      tile.IsHovered = true;
-      hovered = &tile;
+      this->tiles[j][i].Update(deltaTime);
+      if(this->tiles[j][i].Contains(State::Mouse))
+      {
+        this->tiles[j][i].IsHovered = true;
+        hovered = &this->tiles[j][i];
+      }
     }
   }
 
   if(hovered)
   {
+    Flag *currentFlag = nullptr;
+    for(int i = 0; i < this->flags.size(); i++)
+    {
+      if(this->flags[i].x == hovered->X && this->flags[i].y == hovered->Y) 
+      {
+        currentFlag = &this->flags[i];
+        break;
+      }
+    }
+
     int right_btn = glfwGetMouseButton(this->window, GLFW_MOUSE_BUTTON_RIGHT);
-    if(right_btn == GLFW_PRESS && !hovered->IsRevealed && actions > 0)
+    if(!currentFlag && right_btn == GLFW_PRESS && !hovered->IsRevealed && actions > 0)
     {
       this->flags.push_back(Flag(hovered->X, hovered->Y, TILE_SIZE, TILE_SIZE));
       actions = 0;
     }
+    
+    if(right_btn == GLFW_PRESS && currentFlag && actions > 0)
+    {
+      // Remove flag from array
+      currentFlag->shouldRemove = true;
+      actions = 0;
+    }
 
     int left_btn = glfwGetMouseButton(this->window, GLFW_MOUSE_BUTTON_LEFT);
-    if(left_btn == GLFW_PRESS && actions > 0)
+    if(!currentFlag && left_btn == GLFW_PRESS && actions > 0)
     {
       hovered->IsRevealed = true;
       actions = 0;
@@ -187,9 +210,13 @@ void Game::update(float deltaTime)
     }
   }
 
-  for(Flag &flag : this->flags)
+  for(int i = 0; i < this->flags.size(); i++)
   {
-    flag.Update(deltaTime);
+    this->flags[i].Update(deltaTime);
+    if(this->flags[i].shouldRemove && this->flags[i].CurrentFrame == 0)
+    {
+      this->flags.erase(this->flags.begin() + i);
+    }
   }
 }
 
