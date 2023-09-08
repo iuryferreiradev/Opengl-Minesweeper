@@ -24,6 +24,7 @@ class Tile
     void Update(float deltaTime);
     bool Contains(glm::vec2 vector);
   private:
+    int neighborCount;
 };
 
 #endif

@@ -9,6 +9,7 @@ Tile::Tile(float x, float y, float width, float height, glm::vec4 color, glm::ve
   this->Color = color;
   this->IsRevealed = false;
   this->ReveladedColor = revealedColor;
+  this->neighborCount = 0;
 }
 
 void Tile::Render(Renderer renderer)
@@ -18,6 +19,11 @@ void Tile::Render(Renderer renderer)
   if(this->IsHovered && !this->IsRevealed)
   {
     renderer.DrawRect(glm::vec2(this->X, this->Y), glm::vec2(this->Width, this->Height), HIGHLIGHT);
+  }
+
+  if(this->HasBomb && this->IsRevealed)
+  {
+    renderer.DrawSprite("bomb", glm::vec2(this->X, this->Y), glm::vec2(TILE_SIZE, TILE_SIZE));
   }
 }
 

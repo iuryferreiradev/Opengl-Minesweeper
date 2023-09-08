@@ -5,6 +5,7 @@
 #include <GLFW/glfw3.h>
 #include <iostream>
 #include <vector>
+#include <random>
 
 #include "resource_manager.hpp"
 #include "renderer.hpp"
@@ -28,6 +29,7 @@ class Game
     void setupWindow();
     void processInputs();
     void terminate();
+    void resetGame();
     Renderer renderer;
     std::vector<std::vector<Tile>> tiles;
     std::vector<Flag> flags;

@@ -96,16 +96,9 @@ void Game::Run()
   }
 }
 
-
-void Game::init()
+void Game::resetGame()
 {
-  this->setupWindow();
-  ResourceManager::LoadShader("rect", "assets/shaders/quad.vert", "assets/shaders/quad.frag");
-  ResourceManager::LoadShader("sprite", "assets/shaders/sprite.vert", "assets/shaders/sprite.frag");
-  ResourceManager::LoadTexture("flag", "assets/images/flag_spritesheet.png");
-
-  this->renderer.Init();
-
+  // Create tile grid
   for(int j = 0; j < ROWS; j++)
   {
     for(int i = 0; i < COLS; i++)
@@ -120,6 +113,42 @@ void Game::init()
       this->tiles[j][i] = Tile(x, y, TILE_SIZE, TILE_SIZE, color, revealedColor);
     }
   }
+
+  // Set bombs
+  int totalBombs = 40;
+  while(totalBombs > 0)
+  {
+    std::random_device rd;
+    std::mt19937 mt(rd());
+
+    std::uniform_int_distribution<int> dist(0, 15);
+
+    int col = dist(mt);
+    int row = dist(mt);
+
+    if(!this->tiles[col][row].HasBomb)
+    {
+      this->tiles[col][row].HasBomb = true;
+      totalBombs--;
+    }
+  }
+
+  // Calculate neighbor count
+
+  // Reset flags and timer
+  this->flags = std::vector<Flag>();
+}
+
+void Game::init()
+{
+  this->setupWindow();
+  ResourceManager::LoadShader("rect", "assets/shaders/quad.vert", "assets/shaders/quad.frag");
+  ResourceManager::LoadShader("sprite", "assets/shaders/sprite.vert", "assets/shaders/sprite.frag");
+  ResourceManager::LoadTexture("flag", "assets/images/flag_spritesheet.png");
+  ResourceManager::LoadTexture("bomb", "assets/images/bomb.png");
+
+  this->renderer.Init();
+  this->resetGame();
 }
 
 void Game::render()
@@ -224,4 +253,10 @@ void Game::processInputs()
 {
   // Manage window events: mousemove, clicks, keyboard, resize, close...
   glfwPollEvents();
+
+  int key_f5 = glfwGetKey(this->window, GLFW_KEY_F5);
+  if(key_f5 == GLFW_PRESS)
+  {
+    this->resetGame();
+  }
 }
