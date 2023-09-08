@@ -4,7 +4,9 @@ This is my second OpenGL and C++ project, in this game i implemented spritesheet
 hover effects, left and right mouse button events and most of the minesweeper 
 mechanics. Once again, taking in consideration that i am still learning the 
 c++ language and OpenGL the code is not 100% well organized and optimized, check 
-my latest projects for better code.
+my latest projects for better code.  
+
+The theme is inspired by the [google's mineesweeper](https://www.google.com/fbx?fbx=minesweeper).
 
 ![minesweeper_gif_02](gifs/minesweeper_gif_01.gif)
 
